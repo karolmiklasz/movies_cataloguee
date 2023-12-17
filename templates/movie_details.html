@@ -1,0 +1,58 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="container">
+
+    <h1 class="my-4">
+        {{ movie.title }}
+    </h1>
+
+    <div class="movie-backdrop" style="background-image: url('{{ backdrop_url }}'); height: 400px; background-size: cover; background-position: center;"></div>
+    <div class="col-lg-12 mb-4">
+        <div class="col-lg-12 mb-4">
+            {% for list in available_lists %}
+                <a href="{{ url_for('homepage', list_type=list) }}" class="btn btn-outline-info {% if current_list == list %}active{% endif %}">{{ list|capitalize }}</a>
+            {% endfor %}
+        </div>
+        
+    </div>
+
+    <div class="row my-4">
+        <div class="col-md-8">
+        </div>
+        <div class="col-md-4">
+            <h3 class="mt-3">{{ movie.tagline }}</h3>
+            <p>{{ movie.overview }}</p>
+            <dl>
+                <dt>Budget</dt>
+                <dd>{{ movie.budget }}</dd>
+                <dt>Genre</dt>
+                <dd>
+                    {% for genre in movie.genres %}
+                        {{ genre.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </dd>
+            </dl>
+        </div>
+    </div>
+    
+    <h3 class="my-4">Cast</h3>
+    <div class="row">
+        {% for actor in cast %}
+        <div class="col-md-3 col-sm-6 mb-4">
+            <a href="#">
+                <figure class="figure">
+                    {% if actor.profile_path %}
+                        <img src="{{ tmdb_image_url(actor.profile_path, "w185") }}" class="figure-img img-fluid rounded" alt="{{ actor.name }}">
+                    {% else %}
+                        <img src="https://placehold.it/185x278?text={{ actor.name }}" class="figure-img img-fluid rounded" alt="{{ actor.name }}">
+                    {% endif %}
+                    <figcaption class="figure-caption">{{ actor.name }} as {{ actor.character }}</figcaption>
+                </figure>
+                </a>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
