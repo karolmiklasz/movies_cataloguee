@@ -36,12 +36,17 @@ def get_single_movie_cast(movie_id):
     response = requests.get(endpoint, headers=headers)
     return response.json()["cast"]
 
+
+def call_tmdb_api(endpoint):
+   full_url = f"https://api.themoviedb.org/3/{endpoint}"
+   headers = {
+       "Authorization": f"Bearer {API_TOKEN}"
+   }
+   response = requests.get(full_url, headers=headers)
+   response.raise_for_status()
+   return response.json()
+
 def get_movies_list(list_type='popular'):
-    endpoint = f"https://api.themoviedb.org/3/movie/{list_type}"
-    headers = {
-        "Authorization": f"Bearer {API_TOKEN}"
-    }
-    response = requests.get(endpoint, headers=headers)
-    response.raise_for_status()
-    data = response.json()
-    return data.get('results', []) 
+    endpoint = f"movie/{list_type}"
+    response = call_tmdb_api(endpoint)
+    return response.get('results', [])
